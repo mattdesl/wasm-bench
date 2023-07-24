@@ -1,0 +1,40 @@
+{
+  "name": "wasm-bench",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "license": "MIT",
+  "author": {
+    "name": "Matt DesLauriers",
+    "url": "https://github.com/mattdesl"
+  },
+  "dependencies": {
+    "assemblyscript": "^0.27.6",
+    "canvas": "^2.11.2"
+  },
+  "scripts": {
+    "test": "node test.js",
+    "build:js": "esbuild src/javascript/process.js --format=esm --minify --bundle --outfile=src/javascript/process.min.js",
+    "build:as": "asc src/assemblyscript/process.ts --target release",
+    "build:zig": "zig build-lib src/zig/process.zig -target wasm32-freestanding -dynamic -rdynamic -femit-bin=build/zig.wasm -Drelease=true -OReleaseSmall --import-memory --initial-memory=65536 --stack 65536 --global-base=0",
+    "build": "npm run build:js && npm run build:as && npm run build:zig",
+    "build:opt": "npm run build && npm run opt:as && npm run opt:zig",
+    "start": "npm run build && node src/bench.js",
+    "start:opt": "npm run build:opt && node src/bench.js",
+    "opt:zig": "wasm-opt build/zig.wasm --fast-math -o build/zig.wasm -O3",
+    "opt:as": "wasm-opt build/assemblyscript.wasm --fast-math -o build/assemblyscript.wasm -O3"
+  },
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mattdesl/wasm-bench.git"
+  },
+  "homepage": "https://github.com/mattdesl/wasm-bench",
+  "bugs": {
+    "url": "https://github.com/mattdesl/wasm-bench/issues"
+  },
+  "devDependencies": {
+    "esbuild": "^0.18.16"
+  }
+}
