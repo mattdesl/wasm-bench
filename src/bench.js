@@ -69,8 +69,6 @@ async function loadPixels(file, scale = 1) {
 }
 
 async function run(type, pixels) {
-  console.log("Runner:", type);
-
   const { data, width, height } = pixels;
 
   const { process, view } = await load(width, height, type);
@@ -86,9 +84,9 @@ async function run(type, pixels) {
   }
 
   const pointer = 0;
-  console.time("process");
+  console.time("time");
   process(pointer, width, height);
-  console.timeEnd("process");
+  console.timeEnd("time");
 
   const canvas = createCanvas(width, height);
   const context = canvas.getContext("2d");
@@ -111,17 +109,12 @@ const files = [
   ["zig", "build/zig.wasm"],
 ];
 
-for (let f of files) {
-  const stat = statSync(f[1]);
-  console.log(`${f[0]}: ${stat.size} bytes`);
-}
-console.log();
-
-const types = files.map((f) => f[0]);
-console.log("Benchmarking...");
 // scale by 2x to accentuate the benchmark speed
 const pixels = await loadPixels("assets/diffuse.jpg", 2);
 console.log(`Image Size: ${pixels.width} x ${pixels.height} px`);
-for (let t of types) {
-  await run(t, pixels);
+console.log();
+for (let [type, filePath] of files) {
+  const stat = statSync(filePath);
+  console.log(`${type}: ${stat.size} bytes`);
+  await run(type, pixels);
 }

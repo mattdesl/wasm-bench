@@ -15,7 +15,7 @@
   },
   "scripts": {
     "test": "node test.js",
-    "build:js": "esbuild src/javascript/process.js --format=esm --minify --bundle --outfile=src/javascript/process.min.js",
+    "build:js": "esbuild src/javascript/process.js --log-level=warning --format=esm --minify --bundle --outfile=src/javascript/process.min.js",
     "build:as": "asc src/assemblyscript/process.ts --target release",
     "build:zig": "zig build-lib src/zig/process.zig -target wasm32-freestanding -dynamic -rdynamic -femit-bin=build/zig.wasm -Drelease=true -OReleaseSmall --import-memory --initial-memory=65536 --stack 65536 --global-base=0",
     "build": "npm run build:js && npm run build:as && npm run build:zig",
