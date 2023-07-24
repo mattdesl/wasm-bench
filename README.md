@@ -4,11 +4,25 @@ A benchmark of JavaScript, Zig and AssemblyScript on image processing task (Sobe
 
 ## Run
 
+Install deps:
+
+- Zig
+- `wasm-opt` (optional)
+- Rust (optional, not yet included in this benchmark)
+
 Git clone, then:
 
 ```sh
 cd wasm-bench
 
+# install deps
+npm install
+
+# run regular
+npm run start
+
+# or, run with wasm-opt if you have it
+npm run start:opt
 ```
 
 ## Results
