@@ -6,9 +6,8 @@ A benchmark of JavaScript, Zig and AssemblyScript on image processing task (Sobe
 
 Install deps:
 
-- Zig
+- Zig - see [here](https://ziglang.org/learn/getting-started/#installing-zig) on how to install v 0.10 or higher
 - `wasm-opt` (optional)
-- Rust (optional, not yet included in this benchmark)
 
 Git clone, then:
 
