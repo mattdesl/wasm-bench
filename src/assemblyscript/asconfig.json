@@ -1,0 +1,20 @@
+{
+  "targets": {
+    "debug": {
+      "outFile": "build/assemblyscript.debug.wasm",
+      "textFile": "build/assemblyscript.debug.wat",
+      "sourceMap": true,
+      "debug": true
+    },
+    "release": {
+      "outFile": "build/assemblyscript.wasm",
+      "textFile": "build/assemblyscript.wat",
+      "sourceMap": true,
+      "optimizeLevel": 3,
+      "shrinkLevel": 0,
+      "converge": true,
+      "noAssert": true
+    }
+  },
+  "options": {}
+}
