@@ -1,4 +1,4 @@
-// TODO: Wrap into wasm somehow?
+use wasm_bindgen::prelude::*;
 
 fn get_pixel(ptr: &[f32], px: usize, py: usize, columns: usize, rows: usize) -> f32 {
   let mut x = px;
@@ -12,6 +12,7 @@ fn get_pixel(ptr: &[f32], px: usize, py: usize, columns: usize, rows: usize) -> 
   return ptr[x + y * columns];
 }
 
+#[wasm_bindgen]
 pub fn process(ptr: &mut [f32], width: usize, height: usize) {
   for y in 0..height {
       for x in 0..width {

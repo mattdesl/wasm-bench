@@ -65,13 +65,9 @@ Runner: zig
 process: 297.444ms
 ```
 
-## Notes
-
-Zig consistently performs better than AssemblyScript in my tests.
-
 ## Other languages
 
-It would be worth comparing C and Rust. There is already a placeholder Rust file, but I haven't gotten it assembled yet to WASM.
+It would be worth comparing C and Rust. There is already a placeholder Rust file, but I haven't gotten it assembled yet to WASM without a bloated binary (dozens of kilobytes).
 
 ## Attributions
 

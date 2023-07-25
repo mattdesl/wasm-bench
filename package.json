@@ -18,11 +18,13 @@
     "build:js": "esbuild src/javascript/process.js --log-level=warning --format=esm --minify --bundle --outfile=src/javascript/process.min.js",
     "build:as": "asc src/assemblyscript/process.ts --target release",
     "build:zig": "zig build-lib src/zig/process.zig -target wasm32-freestanding -dynamic -rdynamic -femit-bin=build/zig.wasm -Drelease=true -OReleaseSmall --import-memory --initial-memory=65536 --stack 65536 --global-base=0",
+    "build:rust": "cargo build --target wasm32-unknown-unknown --release && cp ./target/wasm32-unknown-unknown/release/wasm_bench.wasm build/rust.wasm",
     "build": "npm run build:js && npm run build:as && npm run build:zig",
     "build:opt": "npm run build && npm run opt:as && npm run opt:zig",
     "start": "npm run build && node src/bench.js",
     "start:opt": "npm run build:opt && node src/bench.js",
     "opt:zig": "wasm-opt build/zig.wasm --fast-math -o build/zig.wasm -O3",
+    "opt:rust": "wasm-opt build/rust.wasm --fast-math -o build/rust.wasm -O3",
     "opt:as": "wasm-opt build/assemblyscript.wasm --fast-math -o build/assemblyscript.wasm -O3"
   },
   "keywords": [],
@@ -35,6 +37,7 @@
     "url": "https://github.com/mattdesl/wasm-bench/issues"
   },
   "devDependencies": {
-    "esbuild": "^0.18.16"
+    "esbuild": "^0.18.16",
+    "rimraf": "^5.0.1"
   }
 }
