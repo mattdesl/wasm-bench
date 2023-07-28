@@ -104,10 +104,9 @@ async function run(type, pixels) {
 }
 
 const files = [
-  // ["javascript", "src/javascript/process.min.js"],
+  ["javascript", "src/javascript/process.min.js"],
   ["assemblyscript", "build/assemblyscript.wasm"],
-  // ["zig", "build/zig.wasm"],
-  // ["rust", "build/rust.wasm"],
+  ["zig", "build/zig.wasm"],
 ];
 
 // scale by 2x to accentuate the benchmark speed

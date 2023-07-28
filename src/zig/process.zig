@@ -1,39 +1,39 @@
 const std = @import("std");
 const math = std.math;
 
-fn get_pixel(ptr: [*]f32, px: u32, py: u32, columns: u32, rows: u32) f32 {
-  var x = px;
-  var y = py;
-
-  if (x < 0) x = 0;
-  if (y < 0) y = 0;
-  if (x >= columns) x = columns - 1;
-  if (y >= rows) y = rows - 1;
-  // const idx:usize = @as(usize, x + y * columns);
-  return ptr[x + y * columns];
+fn get_pixel(ptr: [*c]f32, px: u32, py: u32, columns: u32) f32 {
+    return ptr[px + py * columns];
 }
 
-export fn process(ptr: [*]f32, width: u32, height: u32) void {
-  var y: u32 = 0;
-  // var i: u32 = 0;
-  while (y < height) : (y += 1) {
-    var x: u32 = 0;
-    while (x < width) : (x += 1) {
-      const val0 = get_pixel(ptr, x, y, width, height);
-      const val1 = get_pixel(ptr, x + 1, y, width, height);
-      const val2 = get_pixel(ptr, x + 2, y, width, height);
-      const val3 = get_pixel(ptr, x, y + 1, width, height);
-      const val5 = get_pixel(ptr, x + 2, y + 1, width, height);
-      const val6 = get_pixel(ptr, x, y + 2, width, height);
-      const val7 = get_pixel(ptr, x + 1, y + 2, width, height);
-      const val8 = get_pixel(ptr, x + 2, y + 2, width, height);
-      const gx = -1 * val0 + -2 * val3 + -1 * val6 + val2 + 2 * val5 + val8;
-      const gy = -1 * val0 + -2 * val1 + -1 * val2 + val6 + 2 * val7 + val8;
+export fn process(data: [*c]f32, width: u32, height: u32) void {
+    var y: u32 = 0;
+    while (y < height) : (y += 1) {
+        var y1 = y + 1;
+        var y2 = y + 2;
+        if (y1 >= height) y1 = height - 1;
+        if (y2 >= height) y2 = height - 1;
 
-      var mag:f32 = math.sqrt(gx * gx + gy * gy);
-      mag = math.max(0, math.min(1, mag));
-    
-      ptr[x + y * width] = mag;
+        var x: u32 = 0;
+        while (x < width) : (x += 1) {
+            var x1 = x + 1;
+            var x2 = x + 2;
+            if (x1 >= width) x1 = width - 1;
+            if (x2 >= width) x2 = width - 1;
+
+            const val0 = get_pixel(data, x, y, width);
+            const val1 = get_pixel(data, x1, y, width);
+            const val2 = get_pixel(data, x2, y, width);
+            const val3 = get_pixel(data, x, y1, width);
+            const val5 = get_pixel(data, x2, y1, width);
+            const val6 = get_pixel(data, x, y2, width);
+            const val7 = get_pixel(data, x1, y2, width);
+            const val8 = get_pixel(data, x2, y2, width);
+
+            const gx = (val5 - val3) * 2 + (val2 + val8) - (val0 + val6);
+            const gy = (val7 - val1) * 2 + (val6 + val8) - (val0 + val2);
+
+            const mag: f32 = math.min(1, math.sqrt(gx * gx + gy * gy));
+            data[x + y * width] = mag;
+        }
     }
-  }
 }

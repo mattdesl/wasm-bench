@@ -16,5 +16,13 @@
       "noAssert": true
     }
   },
-  "options": {}
+  "options": {
+    "runtime": "stub",
+    "importMemory": true,
+    "bindings": false,
+    "zeroFilledMemory": true,
+    "runPasses": true,
+    "stats": false,
+    "noExportMemory": true
+  }
 }
