@@ -29,44 +29,27 @@ npm run start:opt
 Outputs from relative toolchains.
 
 ```
-javascript: 424 bytes
-assemblyscript: 458 bytes
-zig: 439 bytes
-
-Benchmarking...
 Image Size: 8192 x 8192 px
-Runner: javascript
-process: 818.196ms
 
-Runner: assemblyscript
-process: 415.633ms
+javascript: 356 bytes
+time: 313.56ms
 
-Runner: zig
-process: 293.063ms
-```
+assemblyscript: 390 bytes
+time: 263.965ms
 
-Using `wasm-opt` after building, to further shrink and improve performance:
-
-```
-javascript: 424 bytes
-assemblyscript: 458 bytes
-zig: 425 bytes
-
-Benchmarking...
-Image Size: 8192 x 8192 px
-Runner: javascript
-process: 826.694ms
-
-Runner: assemblyscript
-process: 419.436ms
-
-Runner: zig
-process: 297.444ms
+zig: 431 bytes
+time: 341.903ms
 ```
 
 ## Other languages
 
 It would be worth comparing C and Rust. There is already a placeholder Rust file, but I haven't gotten it assembled yet to WASM without a bloated binary (dozens of kilobytes).
+
+## Notes
+
+The original implementation performed best in Zig, and worst in pure JavaScript. After optimizations from @MaxGraey, AssemblyScript now performs the best, followed closely by pure JavaScript and Zig now being the slowest.
+
+It seems with some optimizations, all three options can be quite performant. One pitfall I've found with AssemblyScript is a lack of structs/tuples; for example, doing `Vec2` math and passing these structs across functions will likely require an allocator and classes, whereas Zig (and other languages) can support these operations without bringing in an allocator.
 
 ## Attributions
 
