@@ -1,6 +1,38 @@
-import { createCanvas, loadImage } from "canvas";
-import { statSync } from "node:fs";
-import { readFile, writeFile } from "node:fs/promises";
+// import { createCanvas, loadImage } from "canvas";
+// import { statSync } from "node:fs";
+// import { readFile, writeFile } from "node:fs/promises";
+
+const { createCanvas, loadImage } = await (async () => {
+  if (typeof document !== "undefined") {
+    return {
+      loadImage: (url) =>
+        new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = reject;
+          img.src = url;
+        }),
+      createCanvas: (width, height) => {
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        return canvas;
+      },
+    };
+  } else {
+    return await import("canvas");
+  }
+})();
+
+async function fileStat(file) {
+  if (typeof document !== "undefined") {
+    const resp = await fetch(file);
+    const blob = await resp.blob();
+    return blob.size;
+  } else {
+    return (await import("node:fs")).statSync(file).size;
+  }
+}
 
 async function instantiateWASM(url, instanceOpts = {}) {
   try {
@@ -56,6 +88,15 @@ async function load(width, height, type) {
   }
 }
 
+async function displayCanvas(canvas, filename = "download.jpg") {
+  if (typeof document !== "undefined") {
+    document.body.appendChild(canvas);
+  } else {
+    const { writeFile } = await import("node:fs/promises");
+    await writeFile(filename, canvas.toBuffer("image/jpeg"));
+  }
+}
+
 async function loadPixels(file, scale = 1) {
   const image = await loadImage(file);
   const width = Math.floor(image.width * scale);
@@ -99,7 +140,7 @@ async function run(type, pixels) {
     imgData.data[i * 4 + 3] = 0xff;
   }
   context.putImageData(imgData, 0, 0);
-  await writeFile(`build/out_${type}.jpg`, canvas.toBuffer("image/jpeg"));
+  await displayCanvas(canvas, `build/out_${type}.jpg`);
   console.log();
 }
 
@@ -114,7 +155,7 @@ const pixels = await loadPixels("assets/diffuse.jpg", 2);
 console.log(`Image Size: ${pixels.width} x ${pixels.height} px`);
 console.log();
 for (let [type, filePath] of files) {
-  const stat = statSync(filePath);
-  console.log(`${type}: ${stat.size} bytes`);
+  const stat = await fileStat(filePath);
+  console.log(`${type}: ${stat} bytes`);
   await run(type, pixels);
 }

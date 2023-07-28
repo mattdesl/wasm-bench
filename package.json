@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "assemblyscript": "^0.27.6",
-    "canvas": "^2.11.2"
+    "canvas": "^2.11.2",
+    "serve": "^14.2.0"
   },
   "scripts": {
     "test": "node test.js",
